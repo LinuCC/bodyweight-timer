@@ -36,6 +36,7 @@ ApplicationWindow
 {
     property string activeExercise: 'Timer'
     property string exerciseStatus: '---'
+    property Page activeExercisePage
 
     initialPage: Qt.resolvedUrl("pages/Home.qml")
     cover: Qt.resolvedUrl("cover/CoverPage.qml")

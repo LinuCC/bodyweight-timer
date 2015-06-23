@@ -59,17 +59,44 @@ CoverBackground {
         }
     }
 
-   // CoverActionList {
-   //     id: coverAction
+    CoverActionList {
+        id: coverAction
 
-   //     CoverAction {
-   //         iconSource: "image://theme/icon-cover-pause"
-   //     }
+       CoverAction {
+            id: pauseAction
+            iconSource: "image://theme/icon-cover-pause"
+            onTriggered: {
+                console.log(activeExercisePage)
+                console.log(activeExercisePage.pauseDuration)
+                console.log(activeExercisePage.flickerList.progressCircle.progressCircleTimer.running)
+            }
+        }
 
-   //     CoverAction {
-   //         iconSource: "image://theme/icon-cover-refresh"
-   //     }
-   // }
+        CoverAction {
+            id: restartAction
+            iconSource: "image://theme/icon-cover-refresh"
+            onTriggered: {
+                if(activeExercisePage) {
+                    activeExercisePage.activeTimeDuration =
+                        activeExercisePage.activeTimeDurationPermanent
+                    activeExercisePage.pauseDuration =
+                        activeExercisePage.pauseDurationPermanent
+                    activeExercisePage.roundsPerExercise =
+                        activeExercisePage.roundsPerExercisePermanent
+                    activeExercisePage.sumAllDurations =
+                        activeExercisePage.sumAllDurationsPermanent
+                    activeExercisePage.numberOfExercises =
+                        activeExercisePage.numberOfExercisesPermanent
+                    activeExercisePage.activeTimeRemaining =
+                        activeExercisePage.activeTimeDurationPermanent
+                    activeExercisePage.pauseTimeRemaining =
+                        activeExercisePage.pauseDurationPermanent
+                    activeExercisePage.isActiveTime = true
+                    activeExercisePage.progressCircleColor = "lime"
+                }
+            }
+        }
+    }
 }
 
 

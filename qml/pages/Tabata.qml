@@ -33,7 +33,7 @@ Page{
     //duration of active time
     property int activeTimeDuration:value2
     //save for reset. dont change
-    property int activeTimeDurationPermament:value2
+    property int activeTimeDurationPermanent:value2
 
     //duration of pause
     property int pauseDuration:value3
@@ -51,12 +51,12 @@ Page{
     property int numberOfExercisesPermanent: value4
 
     //sum of all active times + pauses
-    property int sumAllDurations: (activeTimeDurationPermament+pauseDurationPermanent)*roundsPerExercisePermanent
+    property int sumAllDurations: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
     //save for reset. dont change
-    property int sumAllDurationsPermanent: (activeTimeDurationPermament+pauseDurationPermanent)*roundsPerExercisePermanent
+    property int sumAllDurationsPermanent: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
 
     //track the current mode (active or pause)
-    property int activeTimeRemaining: activeTimeDurationPermament
+    property int activeTimeRemaining: activeTimeDurationPermanent
     property int pauseTimeRemaining: pauseDurationPermanent
     property bool isActiveTime: true
 
@@ -114,6 +114,7 @@ Page{
                 onTriggered: {
                     //init
                     activeExercise = 'Tabata'
+                    activeExercisePage = exercisePage
                     if(exercisePage.sumAllDurations === exercisePage.sumAllDurationsPermanent) {
                         var secondsOfCurrentTime = (exercisePage.sumAllDurationsPermanent % 60)
                         progressCircle.value = (100-(0.0166666666766666667 * secondsOfCurrentTime))
@@ -151,13 +152,13 @@ Page{
                         //count remaining time
                         if(isActiveTime)
                         {
-                            console.log(activeTimeRemaining)
+                            // console.log(activeTimeRemaining)
                             activeTimeRemaining = activeTimeRemaining-1
-                            console.log(activeTimeRemaining)
+                            // console.log(activeTimeRemaining)
                         } else {
-                            console.log(pauseTimeRemaining)
+                            // console.log(pauseTimeRemaining)
                             pauseTimeRemaining = pauseTimeRemaining-1
-                            console.log(pauseTimeRemaining)
+                            // console.log(pauseTimeRemaining)
 
                         }
 
@@ -168,7 +169,7 @@ Page{
                             doubleBell.play()
                             isActiveTime = false
                             progressCircleColor = "red"
-                            activeTimeRemaining = activeTimeDurationPermament
+                            activeTimeRemaining = activeTimeDurationPermanent
                         }
                         if(pauseTimeRemaining === 0) //Enter active-mode
                         {
