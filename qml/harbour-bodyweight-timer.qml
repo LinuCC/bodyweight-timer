@@ -34,6 +34,9 @@ import "pages"
 
 ApplicationWindow
 {
+    property string activeExercise: 'Timer'
+    property string exerciseStatus: '---'
+
     initialPage: Qt.resolvedUrl("pages/Home.qml")
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }

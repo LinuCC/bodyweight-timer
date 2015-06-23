@@ -113,6 +113,7 @@ Page{
                 running: false
                 onTriggered: {
                     //init
+                    activeExercise = 'Tabata'
                     if(exercisePage.sumAllDurations === exercisePage.sumAllDurationsPermanent) {
                         var secondsOfCurrentTime = (exercisePage.sumAllDurationsPermanent % 60)
                         progressCircle.value = (100-(0.0166666666766666667 * secondsOfCurrentTime))
@@ -134,6 +135,7 @@ Page{
                             exercisePage.numberOfExercises = exercisePage.numberOfExercisesPermanent
                             progressCircleTimer.restart()
                             progressCircleTimer.stop()
+                            exerciseStatus = "Finished"
                     } else {
                             //reset timer and remove 1 of a exercise
                             exercisePage.numberOfExercises = exercisePage.numberOfExercises-1
@@ -162,6 +164,7 @@ Page{
 
                         if(activeTimeRemaining === 0) //Enter pause-mode
                         {
+                            exerciseStatus = "Pause"
                             doubleBell.play()
                             isActiveTime = false
                             progressCircleColor = "red"
@@ -169,6 +172,7 @@ Page{
                         }
                         if(pauseTimeRemaining === 0) //Enter active-mode
                         {
+                            exerciseStatus = "Active"
                             singleBell.play()
                             isActiveTime = true
                             progressCircleColor = "lime"

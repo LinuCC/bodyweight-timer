@@ -32,23 +32,44 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
-    Label {
-        id: label
-        anchors.centerIn: parent
-        text: "bodyweight\nTimer"
+
+    Column {
+        spacing: Theme.paddingMedium;
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: Theme.paddingMedium
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Theme.secondaryHighlightColor
+            height: 80
+            width: 210
+            radius: 10.
+            Label {
+                id: activeExerciseLabel
+                color: Theme.primaryColor
+                font.bold: true
+                anchors.centerIn: parent
+                text: activeExercise
+            }
+        }
+        Label {
+            id: exerciseStatusLabel
+            height: 80
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: exerciseStatus
+        }
     }
 
-//    CoverActionList {
-//        id: coverAction
+   // CoverActionList {
+   //     id: coverAction
 
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-next"
-//        }
+   //     CoverAction {
+   //         iconSource: "image://theme/icon-cover-pause"
+   //     }
 
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-pause"
-//        }
-//    }
+   //     CoverAction {
+   //         iconSource: "image://theme/icon-cover-refresh"
+   //     }
+   // }
 }
 
 
