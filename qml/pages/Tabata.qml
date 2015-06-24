@@ -10,60 +10,83 @@ Page{
     property variant    page
     property variant    title
 
-    //  get parameters from DB
-    property variant    value1ReturnFromDB:     DB.getDatabaseValuesFor(page,"value1")
-    property variant    value2ReturnFromDB:     DB.getDatabaseValuesFor(page,"value2")
-    property variant    value3ReturnFromDB:     DB.getDatabaseValuesFor(page,"value3")
-    property variant    value4ReturnFromDB:     DB.getDatabaseValuesFor(page,"value4")
-    property int        value1:                 value1ReturnFromDB[0]
-    property int        value2:                 value2ReturnFromDB[0]
-    property int        value3:                 value3ReturnFromDB[0]
-    property int        value4:                 value4ReturnFromDB[0]
-
-    property variant    value1DescFromDB:       DB.getDatabaseValuesFor(page,"value1Desc")
-    property variant    value2DescFromDB:       DB.getDatabaseValuesFor(page,"value2Desc")
-    property variant    value3DescFromDB:       DB.getDatabaseValuesFor(page,"value3Desc")
-    property variant    value4DescFromDB:       DB.getDatabaseValuesFor(page,"value4Desc")
-    property string     value1Desc:             value1DescFromDB[0]
-    property string     value2Desc:             value2DescFromDB[0]
-    property string     value3Desc:             value3DescFromDB[0]
-    property string     value4Desc:             value4DescFromDB[0]
-
     //  page internal properties
     //duration of active time
-    property int activeTimeDuration:value2
+    property int activeTimeDuration: 0
     //save for reset. dont change
-    property int activeTimeDurationPermanent:value2
+    property int activeTimeDurationPermanent: 0
 
     //duration of pause
-    property int pauseDuration:value3
+    property int pauseDuration: 0
     //save for reset. dont change
-    property int pauseDurationPermanent:value3
+    property int pauseDurationPermanent: 0
 
     //rounds per exercise
-    property int roundsPerExercise:value1
+    property int roundsPerExercise: 0
     //save for reset. dont change
-    property int roundsPerExercisePermanent:value1
+    // property int roundsPerExercisePermanent: 0
 
     //number of exercises
-    property int numberOfExercises: value4
+    property int numberOfExercises:  0
     //save for reset. dont change
-    property int numberOfExercisesPermanent: value4
+    property int numberOfExercisesPermanent:  0
 
     //sum of all active times + pauses
-    property int sumAllDurations: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
+    property int sumAllDurations: 0
     //save for reset. dont change
-    property int sumAllDurationsPermanent: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
+    // property int sumAllDurationsPermanent: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
 
     //track the current mode (active or pause)
-    property int activeTimeRemaining: activeTimeDurationPermanent
-    property int pauseTimeRemaining: pauseDurationPermanent
+    property int activeTimeRemaining: 0
+    property int pauseTimeRemaining: 0
     property bool isActiveTime: true
 
     //ProgressCircle
     property string progressCircleColor: "lime"
 
     //duration of an exercise: per every exercise (this are rounds too) -> roundsPerExercise * (activeTimeDuration+pauseDuration)
+
+    function restartTimer() {
+        resetTimer()
+        continueTimer()
+    }
+
+    function resetTimer() {
+        progressCircleTimer.running = false
+        var val1 = DB.getDatabaseValuesFor(page, "value1")[0]
+        var val2 = DB.getDatabaseValuesFor(page, "value2")[0]
+        var val3 = DB.getDatabaseValuesFor(page, "value3")[0]
+        var val4 = DB.getDatabaseValuesFor(page, "value4")[0]
+        roundsPerExercise = val1
+        activeTimeDuration = val2
+        pauseDuration = val3
+        numberOfExercisesPermanent = numberOfExercises = val4
+        sumAllDurations = (activeTimeDuration + pauseDuration) *
+            roundsPerExercise
+        activeTimeRemaining = activeTimeDuration
+        pauseTimeRemaining = pauseDuration
+        isActiveTime = true
+        progressCircleColor = "lime"
+    }
+
+    function continueTimer() {
+        activeExercise = 'Tabata'
+        activeExercisePage = exercisePage
+        exerciseStatus = (activeTimeRemaining === 0) ? "Pause" : "Active"
+        progressCircleTimer.running = true
+    }
+
+    function pauseTimer() {
+        exerciseStatus = 'Halted'
+        progressCircleTimer.running = false
+    }
+
+    /*
+     * Immediately start timer after page loaded
+     */
+    Component.onCompleted: {
+        restartTimer()
+    }
 
     SilicaFlickable {
         id: flickerList
@@ -181,7 +204,6 @@ Page{
                         }
                     }
                 }
-                triggeredOnStart: true
             }
         }
 
