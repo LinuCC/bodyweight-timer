@@ -30,6 +30,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../js/helper.js" as Helper
 
 CoverBackground {
 
@@ -57,6 +58,20 @@ CoverBackground {
             anchors.horizontalCenter: parent.horizontalCenter
             text: exerciseStatus
         }
+        Label {
+            id: exerciseTickerLabel
+            height: 80
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: {
+                if(activeExercisePage) {
+                    var val = activeExercisePage.getTickingValue()
+                    Helper.secondsToTimeString(val)
+                }
+                else {
+                    '---'
+                }
+            }
+        }
     }
 
     CoverActionList {
@@ -66,9 +81,12 @@ CoverBackground {
             id: pauseAction
             iconSource: "image://theme/icon-cover-pause"
             onTriggered: {
-                console.log(activeExercisePage)
-                console.log(activeExercisePage.pauseDuration)
-                console.log(activeExercisePage.flickerList.progressCircle.progressCircleTimer.running)
+                if(activeExercisePage.isTimerRunning) {
+                    activeExercisePage.pauseTimer()
+                }
+                else {
+                    activeExercisePage.continueTimer()
+                }
             }
         }
 
@@ -77,22 +95,7 @@ CoverBackground {
             iconSource: "image://theme/icon-cover-refresh"
             onTriggered: {
                 if(activeExercisePage) {
-                    activeExercisePage.activeTimeDuration =
-                        activeExercisePage.activeTimeDurationPermanent
-                    activeExercisePage.pauseDuration =
-                        activeExercisePage.pauseDurationPermanent
-                    activeExercisePage.roundsPerExercise =
-                        activeExercisePage.roundsPerExercisePermanent
-                    activeExercisePage.sumAllDurations =
-                        activeExercisePage.sumAllDurationsPermanent
-                    activeExercisePage.numberOfExercises =
-                        activeExercisePage.numberOfExercisesPermanent
-                    activeExercisePage.activeTimeRemaining =
-                        activeExercisePage.activeTimeDurationPermanent
-                    activeExercisePage.pauseTimeRemaining =
-                        activeExercisePage.pauseDurationPermanent
-                    activeExercisePage.isActiveTime = true
-                    activeExercisePage.progressCircleColor = "lime"
+                    activeExercisePage.restartTimer()
                 }
             }
         }

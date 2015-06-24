@@ -34,12 +34,15 @@ Page{
     //sum of all active times + pauses
     property int sumAllDurations: 0
     //save for reset. dont change
-    // property int sumAllDurationsPermanent: (activeTimeDurationPermanent+pauseDurationPermanent)*roundsPerExercisePermanent
+    property int sumAllDurationsPermanent: 0
 
     //track the current mode (active or pause)
     property int activeTimeRemaining: 0
     property int pauseTimeRemaining: 0
     property bool isActiveTime: true
+
+    // Allow checking other modules if tabata is running or not
+    property bool isTimerRunning: false
 
     //ProgressCircle
     property string progressCircleColor: "lime"
@@ -63,8 +66,9 @@ Page{
         numberOfExercisesPermanent = numberOfExercises = val4
         sumAllDurations = (activeTimeDuration + pauseDuration) *
             roundsPerExercise
-        activeTimeRemaining = activeTimeDuration
-        pauseTimeRemaining = pauseDuration
+        sumAllDurationsPermanent = sumAllDurations
+        activeTimeRemaining = activeTimeDurationPermanent = activeTimeDuration
+        pauseTimeRemaining = pauseDurationPermanent = pauseDuration
         isActiveTime = true
         progressCircleColor = "lime"
     }
@@ -73,13 +77,25 @@ Page{
         activeExercise = 'Tabata'
         activeExercisePage = exercisePage
         exerciseStatus = (activeTimeRemaining === 0) ? "Pause" : "Active"
+        isTimerRunning = true
         progressCircleTimer.running = true
     }
 
     function pauseTimer() {
         exerciseStatus = 'Halted'
+        isTimerRunning = false
         progressCircleTimer.running = false
     }
+
+    function getTickingValue() {
+        if(isActiveTime) {
+            return activeTimeRemaining
+        }
+        else {
+            return pauseTimeRemaining
+        }
+    }
+
 
     /*
      * Immediately start timer after page loaded
@@ -215,7 +231,7 @@ Page{
             anchors.verticalCenterOffset : (Theme.itemSizeMedium)+progressCircle.height
             text: {
                 var currentRoundFromLowToHigh = (numberOfExercisesPermanent-numberOfExercises+1)
-                if(currentRoundFromLowToHigh <= numberOfExercisesPermanent && progressCircleTimer.running) {
+                if(currentRoundFromLowToHigh <= numberOfExercisesPermanent && isTimerRunning) {
                     "current excerise: " + currentRoundFromLowToHigh
                 }
                 else { "Go for it!" }
@@ -229,13 +245,21 @@ Page{
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: Theme.paddingLarge
             text: {
-                if(progressCircleTimer.running) {
+                if(isTimerRunning) {
                     "Pause"
                 } else {
                     "Start"
                 }
             }
-            onClicked: progressCircleTimer.running = !progressCircleTimer.running
+            onClicked: {
+                if(isTimerRunning) {
+                    pauseTimer()
+                } else {
+                    continueTimer()
+                }
+            // progressCircleTimer.running = !progressCircleTimer.running
+            }
+
         }
     }
 }
